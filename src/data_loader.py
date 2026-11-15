@@ -14,5 +14,5 @@ else:
     df.index = df.index.tz_localize(None)
 
     filename = f"{ticker}_{start}_to_{end}.csv"
-    df.to_csv(filename)
+    df.to_csv(f"data/{filename}")
     print(f"Saved {len(df)} rows to {filename}")
