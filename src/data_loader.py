@@ -1,28 +1,33 @@
+import matplotlib.pyplot as plt
 import yfinance as yf
 import pandas as pd
 
+# Declare variables for stock
 ticker = "QQQ"
 start = "2015-01-02"
-end = "2026-08-30"
+end = "2025-12-31"
 
-df = yf.Ticker(ticker).history(start=start, end=end)
+# If no CSV, create new one
+def download_market_data():
 
-if df.empty:
-    print(f"No data returned for {ticker}. Check the symbol or date range.")
 
-else:
-    df.index = df.index.tz_localize(None)
+    try:
+        df = yf.Ticker(ticker).history(start=start, end=end)
+        df.index = df.index.tz_localize(None)
+        filename = f"f{ticker}_{start}_to_{end}.csv"
+        if df.empty:
+            raise ValueError
+        else:
+            df.to_csv(f"data/{filename}")
+            print(f"Saved {len(df)} rows to {filename}")
 
-    filename = f"{ticker}_{start}_to_{end}.csv"
-    if filename is not None:
-        df.to_csv(f"data/{filename}")
-        print(f"Saved {len(df)} rows to {filename}")
+    except ValueError as e:
+        print(f"Data validation error: {e}")
 
-    missing_markers = ["n/a", "na", "null", "-", "?", ""]
-    df = pd.read_csv(f"data/{filename}", na_values=missing_markers)
-    print("Has missing values: ", df.isnull().values.any())
+    except Exception as e:
+        print(f"Download failed: {e}")
 
-filename = f"{ticker}_{start}_to_{end}.csv"
-df = pd.read_csv(f"data/{filename}")
-print(df.head(5))
-print(df.tail(5))
+
+# If CSV exists, load into pandas
+def load_csv():
+    ...
