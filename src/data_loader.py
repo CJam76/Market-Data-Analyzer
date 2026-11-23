@@ -49,4 +49,5 @@ def load_market_data():
     else:
         return(download_market_data())
 
-print(load_market_data())
+if __name__ == "__main__":
+    print(load_market_data())
